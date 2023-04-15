@@ -1,7 +1,9 @@
 from datetime import datetime
 from app.db import Base
 from .Vote import Vote
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, select, func
+from sqlalchemy import func
+from sqlalchemy import select
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship, column_property
 
 class Post(Base):
@@ -12,8 +14,9 @@ class Post(Base):
   user_id = Column(Integer, ForeignKey('users.id'))
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+  # had to remove square brackets from around the func.count(Vote.id) that the lesson was showing to add.  However the result was an error when I was using the square brackets and now it is running the query properly.
   vote_count = column_property(
-    select([func.count(Vote.id)]).where(Vote.post_id == id)
+    select(func.count(Vote.id)).where(Vote.post_id == id)
   )
   
   user = relationship('User')
